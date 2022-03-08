@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_grah"
+    app:startDestination="@id/runFragment">
+    <fragment
+        android:id="@+id/runFragment"
+        android:name="com.example.runningapp.ui.RunFragment"
+        android:label="RunFragment" >
+        <action
+            android:id="@+id/action_runFragment_to_trackingFragment"
+            app:destination="@id/trackingFragment"
+            app:popUpTo="@id/runFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.runningapp.ui.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/trackingFragment"
+        android:name="com.example.runningapp.ui.TrackingFragment"
+        android:label="TrackingFragment" />
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="com.example.runningapp.ui.StatisticsFragment"
+        android:label="StatisticsFragment" />
+</navigation>

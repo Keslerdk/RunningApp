@@ -38,6 +38,6 @@ interface RunDao {
     fun getTotalTime() : LiveData<Long>
 
     @Query("select SUM(timeInMillis) from running_table")
-    fun getTotalTCalories() : LiveData<Int>
+    fun getTotalCalories() : LiveData<Int>
 
 }

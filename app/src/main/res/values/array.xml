@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="filter_options">
+        <item>Data</item>
+        <item>Average Speed</item>
+        <item>Distance</item>
+        <item>Time</item>
+        <item>Burned Calories</item>
+    </string-array>
+</resources>

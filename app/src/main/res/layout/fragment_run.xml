@@ -13,28 +13,58 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/space_cabet_29"
         tools:context=".ui.RunFragment">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/running_title"
+            style="@style/Widget.MaterialComponents.TexView.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Runs"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/runnings"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/sorted_by"
+            style="@style/Widget.MaterialComponents.TexView.Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/sorted_by"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/running_title"
+            tools:text="Sorted by:" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/lavender"
+            android:entries="@array/filter_options"
+            android:popupBackground="@color/space_cabet_34"
+            android:spinnerMode="dropdown"
+            android:theme="@style/Spinner"
+            app:layout_constraintBaseline_toBaselineOf="@+id/sorted_by"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/sorted_by" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintHorizontal_bias=".9"
-            app:layout_constraintVertical_bias=".95"
             android:onClick="@{() -> fragment.navigateToTracker()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias=".9"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias=".95" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

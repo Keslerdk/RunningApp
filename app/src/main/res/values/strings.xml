@@ -4,8 +4,10 @@
 <!--    titles-->
     <string name="runnings">Runnings</string>
     <string name="statistics">Statistics</string>
+    <string name="settings">Settings</string>
 
-<!--    bottom sheet text-->
+
+    <!--    bottom sheet text-->
     <string name="distance">Total Distant</string>
     <string name="average_speed">Average Speed</string>
     <string name="total_time">Total Time</string>
@@ -13,8 +15,10 @@
 
 <!--    other-->
     <string name="sorted_by">Sorted by:</string>
-    <string name="settings">Settings</string>
     <string name="your_name">Your name</string>
     <string name="your_weight">Your weight</string>
     <string name="apply">Apply</string>
+
+<!--    permissions-->
+    <string name="permission_request">You need to accept location permission to use this app</string>
 </resources>

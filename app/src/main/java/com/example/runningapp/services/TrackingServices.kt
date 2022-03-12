@@ -1,5 +1,6 @@
 package com.example.runningapp.services
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
@@ -7,27 +8,70 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.os.Build
+import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.MutableLiveData
 import com.example.runningapp.R
 import com.example.runningapp.other.Constants.ACTION_PAUSE_SERVICE
 import com.example.runningapp.other.Constants.ACTION_SHOW_TRACKING_FRAGMENT
 import com.example.runningapp.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import com.example.runningapp.other.Constants.ACTION_STOP_SERVICE
+import com.example.runningapp.other.Constants.FASTEST_LOCATION_INTERVAL
+import com.example.runningapp.other.Constants.LOCATION_UPDATE_INTERVAL
 import com.example.runningapp.other.Constants.NOTIFICATION_CHANNEL_ID
 import com.example.runningapp.other.Constants.NOTIFICATION_CHANNEL_NAME
 import com.example.runningapp.other.Constants.NOTIFICATION_ID
+import com.example.runningapp.other.TrackingUtility
 import com.example.runningapp.ui.MainActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.maps.model.LatLng
 import timber.log.Timber
+
+
+typealias Polyline = MutableList<LatLng>
+typealias Polylines = MutableList<Polyline>
 
 class TrackingServices : LifecycleService() {
 
+    private var isFirstRun = true
 
-    var isFirstRun = true
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    companion object {
+        val isTracking = MutableLiveData<Boolean>()
+        val pathPoints = MutableLiveData<Polylines>()
+
+        private fun postInitialValues() {
+            // postValue() method is for background thread
+            isTracking.postValue(false)
+            pathPoints.postValue(mutableListOf())
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        //get current location
+        fusedLocationProviderClient = FusedLocationProviderClient(this)
+
+        isTracking.observe(this, {
+            updateLocationTracking(it)
+        })
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        isTracking.postValue(true)
+        addEmptyPolyline()
+
         intent?.let {
             when (it.action) {
                 ACTION_START_OR_RESUME_SERVICE -> {
@@ -35,12 +79,14 @@ class TrackingServices : LifecycleService() {
                         startBackgroundService()
                         isFirstRun = false
                     } else {
+                        startBackgroundService()
                         Timber.d("service is running...")
 
                     }
                 }
                 ACTION_PAUSE_SERVICE -> {
                     Timber.d("paused service")
+                    pauseService()
                 }
                 ACTION_STOP_SERVICE -> {
                     Timber.d("stopped service")
@@ -85,5 +131,70 @@ class TrackingServices : LifecycleService() {
         val channel =
             NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, IMPORTANCE_LOW)
         notificationManager.createNotificationChannel(channel)
+    }
+
+    // ---------- polyline and coordination -------------
+
+    private fun pauseService() {
+        isTracking.postValue(false)
+    }
+
+    /**
+     * add new tracker(polyline)
+     */
+    private fun addEmptyPolyline() = pathPoints.value?.apply {
+        add(mutableListOf())
+        pathPoints.postValue(this)
+    } ?: pathPoints.postValue(mutableListOf(mutableListOf()))
+
+    /**
+     * add new coordination to lists
+     */
+    private fun addPathPoint(location: Location?) {
+        location?.let {
+            val pos = LatLng(location.latitude, location.longitude)
+            pathPoints.value?.apply {
+                last().add(pos)
+                pathPoints.postValue(this)
+            }
+        }
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(p0: LocationResult) {
+            super.onLocationResult(p0)
+            // saving new coordination
+            if (isTracking.value!!) {
+                p0.locations.let {
+                    for (location in it) {
+                        addPathPoint(location)
+                        Timber.d("new location ${location.latitude}, ${location.longitude}")
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun updateLocationTracking(isTracking: Boolean) {
+        if (isTracking) {
+            if (TrackingUtility.hasLocationPermission(this)) {
+                val request = LocationRequest().apply {
+                    interval = LOCATION_UPDATE_INTERVAL
+                    fastestInterval = FASTEST_LOCATION_INTERVAL
+                    priority = PRIORITY_HIGH_ACCURACY
+                }
+
+                // observe location
+                fusedLocationProviderClient.requestLocationUpdates(
+                    request,
+                    locationCallback,
+                    Looper.getMainLooper()
+                )
+
+            } else {
+                fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+            }
+        }
     }
 }

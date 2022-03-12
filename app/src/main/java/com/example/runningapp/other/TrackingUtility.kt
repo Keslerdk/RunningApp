@@ -36,7 +36,7 @@ object TrackingUtility {
         return if (!withMillis) {
             "${if (hours < 10) "0" else ""}$hours:" +
                     "${if (minutes < 10) "0" else ""}$minutes:" +
-                    "${if (seconds < 10) "0" else ""}$seconds:"
+                    "${if (seconds < 10) "0" else ""}$seconds"
         } else {
             milliseconds -= TimeUnit.SECONDS.toMillis(seconds)
             milliseconds /=10

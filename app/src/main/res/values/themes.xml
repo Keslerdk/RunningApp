@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryDark">@color/purple_700</item>
         <item name="colorAccent">@color/teal_200</item>
-        <item name="colorOnSurface">@color/grey</item>
+        <item name="colorOnSurface">@color/black</item>
 
         <!-- Customize your theme here. -->
     </style>
@@ -43,5 +43,9 @@
         <item name="colorOnSurface">@color/grey</item>
         <item name="colorError">@color/congo_pink</item>
         <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
+    </style>
+
+    <style name="Widget.ActionBar.Theme" parent="Theme.AppCompat.NoActionBar" >
+        <item name="actionMenuTextColor">@color/lavender</item>
     </style>
 </resources>

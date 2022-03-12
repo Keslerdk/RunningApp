@@ -3,15 +3,17 @@ package com.example.runningapp.ui
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.runningapp.R
 import com.example.runningapp.databinding.FragmentTrackingBinding
 import com.example.runningapp.other.Constants.ACTION_PAUSE_SERVICE
 import com.example.runningapp.other.Constants.ACTION_START_OR_RESUME_SERVICE
+import com.example.runningapp.other.Constants.ACTION_STOP_SERVICE
 import com.example.runningapp.other.Constants.MAP_ZOOM
 import com.example.runningapp.other.Constants.POLYLINE_WIDTH
 import com.example.runningapp.other.TrackingUtility
@@ -21,6 +23,7 @@ import com.example.runningapp.ui.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
@@ -32,6 +35,7 @@ class TrackingFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var map: GoogleMap? = null
+    private lateinit var menu: Menu
 
     private var isTracking = false
     private var pathPoints = mutableListOf<Polyline>()
@@ -49,11 +53,15 @@ class TrackingFragment : Fragment() {
         binding.fragment = this
         binding.lifecycleOwner = this
 
+        setHasOptionsMenu(true)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        (requireActivity() as AppCompatActivity).setupActionBarWithNavController(findNavController())
+
 
         var mapViewBundle: Bundle? = null
         if (savedInstanceState != null) {
@@ -70,19 +78,59 @@ class TrackingFragment : Fragment() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.toolbar_menu, menu)
+        this.menu = menu
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        if (curTimeInMillis > 0L) {
+            menu.getItem(0)?.isVisible = true
+        }
+    }
+
+    private fun showCloseDialog() {
+        val dialog = MaterialAlertDialogBuilder(
+            requireContext(),
+        ).setTitle("Cancel the Run?")
+            .setMessage("Are you sure to cancel the current run and delete all its data?")
+            .setPositiveButton("Yes") { _, _ ->
+                stopRun()
+            }.setNegativeButton("No") { dialogInterface, _ ->
+                dialogInterface.cancel()
+            }.create()
+        dialog.show()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.close -> showCloseDialog()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun stopRun() {
+        sendCommandToService(ACTION_STOP_SERVICE)
+        findNavController().navigateUp()
+    }
+
     private fun addLatestPolyline() {
-        if (pathPoints.isNotEmpty() and (pathPoints.last().size > 1)) {
-            val preLastLatLong = pathPoints.last()[pathPoints.last().size - 2]
-            val lastLatLong = pathPoints.last().last()
+        if (pathPoints.isNotEmpty()) {
+            if ((pathPoints.last().size > 1)) {
+                val preLastLatLong = pathPoints.last()[pathPoints.last().size - 2]
+                val lastLatLong = pathPoints.last().last()
 
-            val polylineOptions =
-                PolylineOptions()
-                    .color(Color.RED)
-                    .width(POLYLINE_WIDTH)
-                    .add(preLastLatLong)
-                    .add(lastLatLong)
+                val polylineOptions =
+                    PolylineOptions()
+                        .color(Color.RED)
+                        .width(POLYLINE_WIDTH)
+                        .add(preLastLatLong)
+                        .add(lastLatLong)
 
-            map?.addPolyline(polylineOptions)
+                map?.addPolyline(polylineOptions)
+            }
         }
     }
 
@@ -91,7 +139,7 @@ class TrackingFragment : Fragment() {
             updateTracking(it)
         })
 
-        TrackingServices.pathPoints.observe(viewLifecycleOwner,  {
+        TrackingServices.pathPoints.observe(viewLifecycleOwner, {
             this.pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
@@ -105,8 +153,13 @@ class TrackingFragment : Fragment() {
     }
 
     fun toggleRun() {
-        if (!isTracking) sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
-        else sendCommandToService(ACTION_PAUSE_SERVICE)
+        if (!isTracking) {
+            sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
+        }
+        else {
+            menu.getItem(0)?.isVisible = true
+            sendCommandToService(ACTION_PAUSE_SERVICE)
+        }
     }
 
     private fun updateTracking(isTracking: Boolean) {
@@ -124,7 +177,8 @@ class TrackingFragment : Fragment() {
      * always setting camera to current position
      */
     private fun moveCameraToUser() {
-        if (pathPoints.isNotEmpty() and pathPoints.last().isNotEmpty()) {
+        if (pathPoints.isNotEmpty()) {
+            if (pathPoints.last().isNotEmpty())
             map?.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                     pathPoints.last().last(),

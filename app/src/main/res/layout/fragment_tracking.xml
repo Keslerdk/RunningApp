@@ -16,6 +16,7 @@
         android:background="@color/space_cabet_29"
         tools:context=".ui.TrackingFragment">
 
+
         <com.google.android.gms.maps.MapView
             android:id="@+id/google_map"
             android:layout_width="match_parent"
@@ -25,19 +26,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="@string/tracking"
+            android:background="@color/space_cabet_29"
+            android:layout_width="match_parent"
+            app:titleTextColor="@color/lavender"
+            android:layout_height="wrap_content"
+            android:theme="@style/Widget.ActionBar.Theme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:menu="@menu/toolbar_menu"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/timer"
+            style="@style/Widget.MaterialComponents.TexView.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:text="@string/timer_init"
             android:textSize="40sp"
-            style="@style/Widget.MaterialComponents.TexView.Title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/google_map"
-            app:layout_constraintVertical_bias="0.23000002"
-            android:text="@string/timer_init"/>
+            app:layout_constraintVertical_bias="0.23000002" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/start_button"
@@ -52,11 +66,11 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/finish_button"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:text="@string/finish"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

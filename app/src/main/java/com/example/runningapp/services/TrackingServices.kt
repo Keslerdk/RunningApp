@@ -48,6 +48,7 @@ typealias Polylines = MutableList<Polyline>
 class TrackingServices : LifecycleService() {
 
     private var isFirstRun = true
+    private var serviceKilled = false
 
     @Inject         //get current location
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -103,6 +104,7 @@ class TrackingServices : LifecycleService() {
                 }
                 ACTION_STOP_SERVICE -> {
                     Timber.d("stopped service")
+                    killService()
                 }
                 else -> {
                     Timber.d("other service")
@@ -125,11 +127,13 @@ class TrackingServices : LifecycleService() {
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
         timeInSeconds.observe(this, {
-            val notification = curNotificationBuilder.setContentText(
-                TrackingUtility.getFormattedStopWatchTime(it * 1000L)
-            )
+            if (!serviceKilled) {
+                val notification = curNotificationBuilder.setContentText(
+                    TrackingUtility.getFormattedStopWatchTime(it * 1000L)
+                )
 
-            notificationManager.notify(NOTIFICATION_ID, notification.build())
+                notificationManager.notify(NOTIFICATION_ID, notification.build())
+            }
         })
     }
 
@@ -165,11 +169,22 @@ class TrackingServices : LifecycleService() {
             set(curNotificationBuilder, ArrayList<NotificationCompat.Action>())
         }
 
-        curNotificationBuilder = baseNotificationBuilder.addAction(
-            notificationIcon, notificationActionText, pendingIntent,
-        )
-        notificationManger.notify(NOTIFICATION_ID, curNotificationBuilder.build())
+        if (!serviceKilled) {
+            curNotificationBuilder = baseNotificationBuilder.addAction(
+                notificationIcon, notificationActionText, pendingIntent,
+            )
+            notificationManger.notify(NOTIFICATION_ID, curNotificationBuilder.build())
+        }
+    }
 
+    private fun killService() {
+        serviceKilled = true
+        isFirstRun = true
+
+        pauseService()
+        postInitialValues()
+        stopForeground(true)
+        stopSelf()
     }
 
     // ---------- polyline and coordination -------------

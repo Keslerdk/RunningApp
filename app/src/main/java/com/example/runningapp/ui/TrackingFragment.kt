@@ -14,6 +14,7 @@ import com.example.runningapp.other.Constants.ACTION_PAUSE_SERVICE
 import com.example.runningapp.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import com.example.runningapp.other.Constants.MAP_ZOOM
 import com.example.runningapp.other.Constants.POLYLINE_WIDTH
+import com.example.runningapp.other.TrackingUtility
 import com.example.runningapp.services.Polyline
 import com.example.runningapp.services.TrackingServices
 import com.example.runningapp.ui.viewmodels.MainViewModel
@@ -21,7 +22,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.PolylineOptions
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.NonCancellable.start
 
 private const val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
 
@@ -35,6 +35,8 @@ class TrackingFragment : Fragment() {
 
     private var isTracking = false
     private var pathPoints = mutableListOf<Polyline>()
+
+    private var curTimeInMillis = 0L
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -93,6 +95,12 @@ class TrackingFragment : Fragment() {
             this.pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
+        })
+
+        TrackingServices.timeRunInMillis.observe(viewLifecycleOwner, {
+            curTimeInMillis = it
+            val formattedTime = TrackingUtility.getFormattedStopWatchTime(it, true)
+            binding.timer.text = formattedTime
         })
     }
 

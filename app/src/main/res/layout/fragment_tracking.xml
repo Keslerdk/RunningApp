@@ -25,13 +25,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textSize="40sp"
+            style="@style/Widget.MaterialComponents.TexView.Title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/google_map"
+            app:layout_constraintVertical_bias="0.23000002"
+            android:text="@string/timer_init"/>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/start_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:text="@string/start"
             android:onClick="@{()-> fragment.toggleRun()}"
+            android:text="@string/start"
             app:layout_constraintBottom_toTopOf="@+id/finish_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

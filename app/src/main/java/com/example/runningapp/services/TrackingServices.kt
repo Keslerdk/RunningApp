@@ -25,6 +25,7 @@ import com.example.runningapp.other.Constants.LOCATION_UPDATE_INTERVAL
 import com.example.runningapp.other.Constants.NOTIFICATION_CHANNEL_ID
 import com.example.runningapp.other.Constants.NOTIFICATION_CHANNEL_NAME
 import com.example.runningapp.other.Constants.NOTIFICATION_ID
+import com.example.runningapp.other.Constants.TIMER_UPDATE_INTERVAL
 import com.example.runningapp.other.TrackingUtility
 import com.example.runningapp.ui.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -33,6 +34,10 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
@@ -42,23 +47,26 @@ typealias Polylines = MutableList<Polyline>
 class TrackingServices : LifecycleService() {
 
     private var isFirstRun = true
-
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private val timeInSeconds = MutableLiveData<Long>()
 
     companion object {
         val isTracking = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<Polylines>()
-
-        private fun postInitialValues() {
-            // postValue() method is for background thread
-            isTracking.postValue(false)
-            pathPoints.postValue(mutableListOf())
-        }
+        val timeRunInMillis = MutableLiveData<Long>()
     }
+
+    private var isTimerEnabled = false
+    private var lapTime = 0L
+    private var timeRun = 0L
+    private var timeStarted = 0L
+    private var lastSecondTimeStamp = 0L
 
     override fun onCreate() {
         super.onCreate()
 
+        postInitialValues()
         //get current location
         fusedLocationProviderClient = FusedLocationProviderClient(this)
 
@@ -68,9 +76,7 @@ class TrackingServices : LifecycleService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
         isTracking.postValue(true)
-        addEmptyPolyline()
 
         intent?.let {
             when (it.action) {
@@ -79,7 +85,7 @@ class TrackingServices : LifecycleService() {
                         startBackgroundService()
                         isFirstRun = false
                     } else {
-                        startBackgroundService()
+                        startTimer()
                         Timber.d("service is running...")
 
                     }
@@ -100,6 +106,7 @@ class TrackingServices : LifecycleService() {
     }
 
     private fun startBackgroundService() {
+        startTimer()
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -135,8 +142,17 @@ class TrackingServices : LifecycleService() {
 
     // ---------- polyline and coordination -------------
 
+    private fun postInitialValues() {
+        // postValue() method is for background thread
+        isTracking.postValue(false)
+        pathPoints.postValue(mutableListOf())
+        timeRunInMillis.postValue(0)
+        timeInSeconds.postValue(0)
+    }
+
     private fun pauseService() {
         isTracking.postValue(false)
+        isTimerEnabled = false
     }
 
     /**
@@ -189,12 +205,38 @@ class TrackingServices : LifecycleService() {
                 fusedLocationProviderClient.requestLocationUpdates(
                     request,
                     locationCallback,
-                    Looper.getMainLooper()
+                    Looper.getMainLooper(),
                 )
 
             } else {
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback)
             }
+        }
+    }
+
+    // ----------- timer -------------------
+
+    private fun startTimer() {
+        addEmptyPolyline()
+        isTracking.postValue(true)
+        timeStarted = System.currentTimeMillis()
+        isTimerEnabled = true
+
+        CoroutineScope(Dispatchers.Main).launch {
+            while (isTracking.value!!) {
+                // time diff between current time and time started
+                lapTime = System.currentTimeMillis() - timeStarted
+                // post new lap time
+                timeRunInMillis.postValue(timeRun + lapTime)
+
+                if (timeRunInMillis.value!! >= lastSecondTimeStamp + 1000L) {
+                    timeInSeconds.postValue(timeInSeconds.value!! + 1000L)
+                    lastSecondTimeStamp+=1000L
+                }
+
+                delay(TIMER_UPDATE_INTERVAL)
+            }
+            timeRun+=lapTime
         }
     }
 }

@@ -6,14 +6,14 @@
     <data>
         <variable
             name="fragment"
-            type="com.example.runningapp.ui.SettingsFragment" />
+            type="com.example.runningapp.ui.EntryFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/space_cabet_29"
-        tools:context=".ui.SettingFragment">
+        tools:context=".ui.EntryFragment">
 
         <TextView
             android:id="@+id/textView2"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:text="@string/settings"
+            android:text="@string/welcome_to_running_app"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,17 +65,20 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/start_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="@string/apply"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="30dp"
+            android:background="@color/sky_blue"
             android:elevation="5dp"
-            android:onClick="@{() -> fragment.applyChanges()}"
-            android:textColor="@color/lavender"
-            android:background="@color/space_cabet_34"
+            android:text="@string/start"
+            android:onClick="@{() ->  fragment.navigateNext()}"
+            android:textColor="@color/space_cabet_29"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/input_weight" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

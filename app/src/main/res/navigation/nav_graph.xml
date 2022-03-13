@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_grah"
-    app:startDestination="@id/runFragment">
+    app:startDestination="@id/entryFragment">
 
     <action
         android:id="@+id/action_global_tackingFragment"
@@ -36,4 +36,12 @@
         android:id="@+id/runDetailsFragment"
         android:name="com.example.runningapp.ui.RunDetailsFragment"
         android:label="RunDetailsFragment" />
+    <fragment
+        android:id="@+id/entryFragment"
+        android:name="com.example.runningapp.ui.EntryFragment"
+        android:label="EntryFragment" >
+        <action
+            android:id="@+id/action_entryFragment2_to_runFragment"
+            app:destination="@id/runFragment" />
+    </fragment>
 </navigation>

@@ -50,6 +50,7 @@
             android:popupBackground="@color/space_cabet_34"
             android:spinnerMode="dropdown"
             android:theme="@style/Spinner"
+            android:selection="@{fragment.setTypeSelection()}"
             app:layout_constraintBaseline_toBaselineOf="@+id/sorted_by"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

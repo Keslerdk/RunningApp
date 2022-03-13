@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -13,6 +14,7 @@ import com.example.runningapp.R
 import com.example.runningapp.adapters.RunsRecyclerViewAdapter
 import com.example.runningapp.databinding.FragmentRunBinding
 import com.example.runningapp.other.Constants.REQUEST_CODE_LOCATION_PERMISSION
+import com.example.runningapp.other.SortType
 import com.example.runningapp.other.TrackingUtility
 import com.example.runningapp.ui.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +45,27 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         requestPermissions()
 
         setUpRecyclerView()
+
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                when (position) {
+                    0 -> viewModel.sortRuns(SortType.DATA)
+                    1 -> viewModel.sortRuns(SortType.AVG_SPEED)
+                    2 -> viewModel.sortRuns(SortType.DISTANCE)
+                    3 -> viewModel.sortRuns(SortType.TIME)
+                    4 -> viewModel.sortRuns(SortType.BURNED_CALORIES)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+        }
+
     }
 
     fun navigateToTracker() {
@@ -53,10 +76,19 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         val adapter = RunsRecyclerViewAdapter { onRunCardClick() }
         binding.runList.adapter = adapter
 
-        viewModel.getSortedRuns().observe(this, {
+        viewModel.runs.observe(this, {
             adapter.submitData(it)
         })
     }
+
+    fun setTypeSelection() =
+        when (viewModel.sortType) {
+            SortType.DATA -> 0
+            SortType.AVG_SPEED -> 1
+            SortType.DISTANCE -> 2
+            SortType.TIME -> 3
+            SortType.BURNED_CALORIES -> 4
+        }
 
     private fun onRunCardClick() {
         Timber.d("card clicked")

@@ -5,14 +5,17 @@
       <map>
         <entry key="app/src/main/res/drawable/bottom_sheet_background.xml" value="0.321025641025641" />
         <entry key="app/src/main/res/drawable/ic_remove.xml" value="0.321025641025641" />
+        <entry key="app/src/main/res/drawable/run_item_background.xml" value="0.2851851851851852" />
         <entry key="app/src/main/res/drawable/spinner_item.xml" value="0.321025641025641" />
         <entry key="app/src/main/res/drawable/total_card_background.xml" value="0.321025641025641" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15364583333333334" />
         <entry key="app/src/main/res/layout/bottom_sheet.xml" value="0.28883567961640555" />
-        <entry key="app/src/main/res/layout/fragment_run.xml" value="0.19528619528619529" />
+        <entry key="app/src/main/res/layout/fragment_run.xml" value="0.3106590468456753" />
+        <entry key="app/src/main/res/layout/fragment_run_details.xml" value="0.29583333333333334" />
         <entry key="app/src/main/res/layout/fragment_seetings.xml" value="0.1657142857142857" />
         <entry key="app/src/main/res/layout/fragment_statistics.xml" value="0.17365269461077845" />
         <entry key="app/src/main/res/layout/fragment_tracking.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/run_item.xml" value="0.335" />
         <entry key="app/src/main/res/layout/spinner_item.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/menu/bottom_navigaton.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/menu/toolbar_menu.xml" value="0.3098958333333333" />

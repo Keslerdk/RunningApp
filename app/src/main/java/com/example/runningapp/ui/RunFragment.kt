@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.runningapp.R
+import com.example.runningapp.adapters.RunsRecyclerViewAdapter
 import com.example.runningapp.databinding.FragmentRunBinding
 import com.example.runningapp.other.Constants.REQUEST_CODE_LOCATION_PERMISSION
 import com.example.runningapp.other.TrackingUtility
@@ -17,6 +18,7 @@ import com.example.runningapp.ui.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
+import timber.log.Timber
 
 @AndroidEntryPoint
 class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
@@ -39,10 +41,26 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requestPermissions()
+
+        setUpRecyclerView()
     }
 
     fun navigateToTracker() {
         findNavController().navigate(R.id.trackingFragment)
+    }
+
+    private fun setUpRecyclerView() {
+        val adapter = RunsRecyclerViewAdapter { onRunCardClick() }
+        binding.runList.adapter = adapter
+
+        viewModel.getSortedRuns().observe(this, {
+            adapter.submitData(it)
+        })
+    }
+
+    private fun onRunCardClick() {
+        Timber.d("card clicked")
+        findNavController().navigate(R.id.runDetailsFragment)
     }
 
     private fun requestPermissions() {

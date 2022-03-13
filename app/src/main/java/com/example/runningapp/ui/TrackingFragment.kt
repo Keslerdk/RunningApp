@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.runningapp.R
 import com.example.runningapp.databinding.FragmentTrackingBinding
+import com.example.runningapp.db.Run
 import com.example.runningapp.other.Constants.ACTION_PAUSE_SERVICE
 import com.example.runningapp.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import com.example.runningapp.other.Constants.ACTION_STOP_SERVICE
@@ -22,9 +23,13 @@ import com.example.runningapp.services.TrackingServices
 import com.example.runningapp.ui.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import kotlin.math.round
 
 private const val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
 
@@ -105,7 +110,7 @@ class TrackingFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.close -> showCloseDialog()
         }
         return super.onOptionsItemSelected(item)
@@ -155,11 +160,15 @@ class TrackingFragment : Fragment() {
     fun toggleRun() {
         if (!isTracking) {
             sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
-        }
-        else {
+        } else {
             menu.getItem(0)?.isVisible = true
             sendCommandToService(ACTION_PAUSE_SERVICE)
         }
+    }
+
+    fun finishBtnClick() {
+        zoomToSeeWholeTracker()
+        endRunAndSaveToDb()
     }
 
     private fun updateTracking(isTracking: Boolean) {
@@ -179,13 +188,29 @@ class TrackingFragment : Fragment() {
     private fun moveCameraToUser() {
         if (pathPoints.isNotEmpty()) {
             if (pathPoints.last().isNotEmpty())
-            map?.animateCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                    pathPoints.last().last(),
-                    MAP_ZOOM,
+                map?.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        pathPoints.last().last(),
+                        MAP_ZOOM,
+                    )
                 )
-            )
         }
+    }
+
+    private fun zoomToSeeWholeTracker() {
+        val bounds = LatLngBounds.Builder()
+        for (polyline in pathPoints) {
+            for (pos in polyline) bounds.include(pos)
+        }
+
+        map?.moveCamera(
+            CameraUpdateFactory.newLatLngBounds(
+                bounds.build(),
+                binding.googleMap.width,
+                binding.googleMap.height,
+                (binding.googleMap.height * 0.05f).toInt(),
+            )
+        )
     }
 
     private fun addAllPolyline() {
@@ -205,6 +230,37 @@ class TrackingFragment : Fragment() {
             it.action = action
             requireContext().startService(it)
         }
+
+    private fun endRunAndSaveToDb() {
+        map?.snapshot { bmp ->
+            var distanceInMiters = 0
+            for (polyline in pathPoints) {
+                distanceInMiters += TrackingUtility.calculatePolylineLength(polyline).toInt()
+            }
+            val avgSpeed =
+                round((distanceInMiters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
+
+            val dateTimeStamp = Calendar.getInstance().timeInMillis
+            // todo set real weight instead of 56
+            val caloriesBurned = ((distanceInMiters / 1000f) * 56).toInt()
+            val run = Run(
+                img = bmp,
+                timestamp = dateTimeStamp,
+                avgSpeedKIH = avgSpeed,
+                distanceInMeters = distanceInMiters,
+                timeInMillis = curTimeInMillis,
+                caloriesBurned = caloriesBurned,
+            )
+
+            viewModel.insertRun(run)
+            Snackbar.make(
+                requireActivity().findViewById(R.id.root_view),
+                "Run saved successfully",
+                Snackbar.LENGTH_LONG
+            ).show()
+            stopRun()
+        }
+    }
 
     override fun onStart() {
         super.onStart()

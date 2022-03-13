@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/date"
+            style="@style/Widget.MaterialComponents.TexView.Title"
+            android:textSize="18sp"
+            android:textColor="@color/grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="05.01.202 07:30 Am" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/run_card"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/space_cabet_34"
+            android:layout_marginTop="15dp"
+            android:elevation="14dp"
+            app:cardElevation="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/time"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0">
+
+                <ImageView
+                    android:id="@+id/distance_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="2dp"
+                    android:src="@drawable/distance_icon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp" />
+
+                <TextView
+                    android:id="@+id/distance_title"
+                    style="@style/Widget.MaterialComponents.TexView.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tool:text="8327" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp" />
+
+                <TextView
+                    android:id="@+id/distance_subtitle"
+                    style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/miters"
+                    tool:text="Miters" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/speed"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/distance">
+
+                <ImageView
+                    android:id="@+id/time_icon"
+                    android:padding="4dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/time_icon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp" />
+
+                <TextView
+                    android:id="@+id/time_title"
+                    style="@style/Widget.MaterialComponents.TexView.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tool:text="00:15:45" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp" />
+
+                <TextView
+                    android:id="@+id/time_subtitle"
+                    style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/seconds"
+                    tool:text="Time" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/time"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/speed_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/speed_icon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp" />
+
+                <TextView
+                    android:id="@+id/speed_title"
+                    style="@style/Widget.MaterialComponents.TexView.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tool:text="5.26" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp" />
+
+                <TextView
+                    android:id="@+id/speed_subtitle"
+                    style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/speed"
+                    tool:text="Speed" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

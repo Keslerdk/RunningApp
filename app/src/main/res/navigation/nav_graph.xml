@@ -16,6 +16,9 @@
             android:id="@+id/action_runFragment_to_trackingFragment"
             app:destination="@id/trackingFragment"
             app:popUpTo="@id/runFragment" />
+        <action
+            android:id="@+id/action_runFragment_to_runDetailsFragment"
+            app:destination="@id/runDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -29,4 +32,8 @@
         android:id="@+id/statisticsFragment"
         android:name="com.example.runningapp.ui.StatisticsFragment"
         android:label="StatisticsFragment" />
+    <fragment
+        android:id="@+id/runDetailsFragment"
+        android:name="com.example.runningapp.ui.RunDetailsFragment"
+        android:label="RunDetailsFragment" />
 </navigation>

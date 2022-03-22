@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">RunningApp</string>
-    <string name="google_maps_api_key">Your Api Key Here</string>
+    <!--    <string name="google_maps_api_key">Your Api Key Here</string>-->
+    <string name="google_maps_api_key">AIzaSyDEGwjn_HvTElA-CMOMkYHnhO-tfOwZpwg</string>
 
     <!--    titles-->
     <string name="runnings">Runnings</string>
@@ -14,6 +15,7 @@
     <string name="average_speed">Average Speed</string>
     <string name="total_time">Total Time</string>
     <string name="total_calories_burned">Total Calories Burned</string>
+    <string name="avg_speed_over_time">Avg Speed Over Time</string>
 
     <!--    run item-->
     <string name="miters">Meters</string>

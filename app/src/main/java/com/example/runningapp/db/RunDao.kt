@@ -28,16 +28,16 @@ interface RunDao {
     fun getAllRunsSortedByCal() : LiveData<List<Run>>
 
 
-    @Query("select AVG(timeInMillis) from running_table")
+    @Query("select AVG(avgSpeedKIH) from running_table")
     fun getTotalAvdSpeed() : LiveData<Float>
 
-    @Query("select SUM(timeInMillis) from running_table")
+    @Query("select SUM(distanceInMeters) from running_table")
     fun getTotalDistance() : LiveData<Int>
 
     @Query("select SUM(timeInMillis) from running_table")
     fun getTotalTime() : LiveData<Long>
 
-    @Query("select SUM(timeInMillis) from running_table")
+    @Query("select SUM(caloriesBurned) from running_table")
     fun getTotalCalories() : LiveData<Int>
 
 }

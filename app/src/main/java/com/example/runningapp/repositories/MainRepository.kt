@@ -19,4 +19,6 @@ class MainRepository @Inject constructor(private val runDao: RunDao){
     fun getTotalDistance() = runDao.getTotalDistance()
     fun getTotalCalories() = runDao.getTotalCalories()
     fun getTotalTime() = runDao.getTotalTime()
+
+    fun getRun(id: Int) = runDao.getRun(id)
 }

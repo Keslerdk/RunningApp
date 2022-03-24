@@ -10,26 +10,156 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/congo_pink"
+        android:background="@color/space_cabet_29"
         tools:context=".ui.RunDetailsFragment">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            style="@style/Widget.ActionBar.Theme"
+            android:background="@color/space_cabet_29"
+            android:layout_height="wrap_content"
+            android:theme="@style/Widget.ActionBar.Theme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/run_preview"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <TextView
-            style="@style/Widget.MaterialComponents.TexView.Subtitle"
+            android:id="@+id/textView4"
+            style="@style/Widget.MaterialComponents.TexView.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add details here"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/great_work"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/run_preview" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linearLayoutCompat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="start"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
+                style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="center_vertical|start"
+                android:text="@string/distance"
+                android:textSize="22sp" />
+
+            <TextView
+                style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="center_vertical|start"
+                android:layout_marginTop="10dp"
+                android:text="@string/time"
+                android:textSize="22sp" />
+
+            <TextView
+                style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="center_vertical|start"
+                android:layout_marginTop="10dp"
+                android:text="@string/average_speed"
+                android:textSize="22sp" />
+
+            <TextView
+                style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical|start"
+                android:text="@string/calories_burned"
+                android:textSize="22sp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="start"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
+                android:id="@+id/distance"
+                style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="center_vertical|start"
+                android:textSize="22sp"
+                tools:text="15 km" />
+
+            <TextView
+                android:id="@+id/time"
+                android:gravity="center_vertical|start"
+                style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:textSize="22sp"
+                tools:text="2.3 h" />
+
+            <TextView
+                android:id="@+id/speed"
+                style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="center_vertical|start"
+                android:layout_marginTop="10dp"
+                android:textSize="22sp"
+                tools:text="5.5 km/h" />
+
+            <TextView
+                android:id="@+id/calories"
+                style="@style/Widget.MaterialComponents.TexView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical|start"
+                android:text="@string/calories_burned"
+                android:textSize="22sp"
+                tools:text="178 kcal" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

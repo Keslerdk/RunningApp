@@ -11,20 +11,20 @@ import com.example.runningapp.other.TrackingUtility
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RunsRecyclerViewAdapter(private val onCLick: () -> Unit) :
+class RunsRecyclerViewAdapter(private val onCLick: (Int) -> Unit) :
     RecyclerView.Adapter<RunsRecyclerViewAdapter.RunsRecyclerViewHolder>() {
 
     inner class RunsRecyclerViewHolder(private val binding: RunItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(timeStamp: Long, distanceInMeters: Int, timeInMillis: Long, avgSpeed: Float) {
+        fun bind(id: Int, timeStamp: Long, distanceInMeters: Int, timeInMillis: Long, avgSpeed: Float) {
             val dateFormat = SimpleDateFormat("dd.MM.yy hh:mm a", Locale.getDefault())
             binding.date.text = dateFormat.format(timeStamp)
             binding.distanceTitle.text = distanceInMeters.toString()
             binding.timeTitle.text = TrackingUtility.getFormattedStopWatchTime(timeInMillis)
             binding.speedTitle.text = avgSpeed.toString()
 
-            binding.runCard.setOnClickListener { onCLick() }
+            binding.runCard.setOnClickListener { onCLick(id) }
         }
     }
 
@@ -49,12 +49,15 @@ class RunsRecyclerViewAdapter(private val onCLick: () -> Unit) :
     override fun onBindViewHolder(holder: RunsRecyclerViewHolder, position: Int) {
         val curItem = differ.currentList[position]
 
-        holder.bind(
-            curItem.timestamp,
-            curItem.distanceInMeters,
-            curItem.timeInMillis,
-            curItem.avgSpeedKIH
-        )
+        curItem.id?.let {
+            holder.bind(
+                it,
+                curItem.timestamp,
+                curItem.distanceInMeters,
+                curItem.timeInMillis,
+                curItem.avgSpeedKIH
+            )
+        }
     }
 
     override fun getItemCount(): Int {

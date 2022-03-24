@@ -73,7 +73,7 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun setUpRecyclerView() {
-        val adapter = RunsRecyclerViewAdapter { onRunCardClick() }
+        val adapter = RunsRecyclerViewAdapter { id: Int -> onRunCardClick(id) }
         binding.runList.adapter = adapter
 
         viewModel.runs.observe(this, {
@@ -90,9 +90,9 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             SortType.BURNED_CALORIES -> 4
         }
 
-    private fun onRunCardClick() {
-        Timber.d("card clicked")
-        findNavController().navigate(R.id.runDetailsFragment)
+    private fun onRunCardClick(id: Int) {
+        val action = RunFragmentDirections.actionRunFragmentToRunDetailsFragment(id)
+        findNavController().navigate(action)
     }
 
     private fun requestPermissions() {

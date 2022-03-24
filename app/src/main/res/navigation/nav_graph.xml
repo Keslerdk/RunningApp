@@ -35,7 +35,11 @@
     <fragment
         android:id="@+id/runDetailsFragment"
         android:name="com.example.runningapp.ui.RunDetailsFragment"
-        android:label="RunDetailsFragment" />
+        android:label="RunDetailsFragment" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
     <fragment
         android:id="@+id/entryFragment"
         android:name="com.example.runningapp.ui.EntryFragment"

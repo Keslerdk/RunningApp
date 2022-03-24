@@ -40,4 +40,7 @@ interface RunDao {
     @Query("select SUM(caloriesBurned) from running_table")
     fun getTotalCalories() : LiveData<Int>
 
+    @Query("select * from running_table where id = :id")
+    fun getRun(id: Int) : LiveData<Run>
+
 }

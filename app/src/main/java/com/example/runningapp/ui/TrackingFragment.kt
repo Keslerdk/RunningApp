@@ -65,7 +65,10 @@ class TrackingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+
         (requireActivity() as AppCompatActivity).setupActionBarWithNavController(findNavController())
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.tracking)
+
 
 
         var mapViewBundle: Bundle? = null
@@ -98,7 +101,7 @@ class TrackingFragment : Fragment() {
 
     private fun showCloseDialog() {
         val dialog = MaterialAlertDialogBuilder(
-            requireContext(),
+            requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog
         ).setTitle("Cancel the Run?")
             .setMessage("Are you sure to cancel the current run and delete all its data?")
             .setPositiveButton("Yes") { _, _ ->

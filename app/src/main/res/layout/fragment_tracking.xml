@@ -60,6 +60,8 @@
             android:layout_marginBottom="15dp"
             android:onClick="@{()-> fragment.toggleRun()}"
             android:text="@string/start"
+            android:textColor="@color/space_cabet_29"
+            android:backgroundTint="@color/sky_blue"
             app:layout_constraintBottom_toTopOf="@+id/finish_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -71,6 +73,8 @@
             android:layout_marginBottom="30dp"
             android:text="@string/finish"
             android:visibility="gone"
+            android:textColor="@color/space_cabet_29"
+            android:backgroundTint="@color/sky_blue"
             android:onClick="@{() -> fragment.finishBtnClick()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

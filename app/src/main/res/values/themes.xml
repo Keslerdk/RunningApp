@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.RunningApp" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
@@ -8,6 +8,10 @@
         <item name="colorOnSurface">@color/black</item>
 
         <!-- Customize your theme here. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/space_cabet_29_dark</item>
+
+<!--        input text fields-->
+        <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>
     </style>
 
     <style name="Widget.MaterialComponents.TexView.Title" parent="Widget.AppCompat.TextView">
@@ -33,8 +37,6 @@
 
     <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout</item>
-        <item name="colorOnSurface">@color/grey</item>
-        <item name="colorPrimary">@color/lavender</item>
         <item name="hintTextColor">?attr/colorOnSurface</item>
     </style>
 
@@ -47,5 +49,26 @@
 
     <style name="Widget.ActionBar.Theme" parent="Theme.AppCompat.NoActionBar" >
         <item name="actionMenuTextColor">@color/lavender</item>
+    </style>
+
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorSurface">@color/space_cabet_29</item>
+        <item name="colorOnSurface">@color/lavender</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.App.Title.Text</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button</item>
+    </style>
+
+    <style name="MaterialAlertDialog.App.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@color/lavender</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Button</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Button" parent="">
+        <item name="colorPrimary">@color/congo_pink</item>
     </style>
 </resources>

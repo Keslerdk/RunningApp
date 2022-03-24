@@ -5,8 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import com.example.runningapp.databinding.FragmentSeetingsBinding
+import com.example.runningapp.databinding.FragmentSettingsBinding
 import com.example.runningapp.other.Constants
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
-    private var _binding: FragmentSeetingsBinding? = null
+    private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
     @Inject
@@ -31,7 +32,7 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSeetingsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         binding.apply {
             fragment = this@SettingsFragment
@@ -45,6 +46,21 @@ class SettingsFragment : Fragment() {
 
         setCurrentPersonalDataToFields()
 
+        binding.inputName.editText?.addTextChangedListener {
+            isApplyChangesAvailable()
+        }
+        binding.inputWeight.editText?.addTextChangedListener {
+            isApplyChangesAvailable()
+        }
+
+    }
+
+    private fun isApplyChangesAvailable() {
+        val name = binding.inputName.editText?.text.toString()
+        val weight = binding.inputWeight.editText?.text.toString()
+
+        binding.applyBtn.isEnabled = !(name.isEmpty() or weight.isEmpty() or
+                (name.contentEquals(this.name) and ((weight.toFloatOrNull()) == this.weight)))
     }
 
     fun applyChanges() {
@@ -59,17 +75,18 @@ class SettingsFragment : Fragment() {
 
     private fun updatePersonalDataSharedPrefs(): Boolean {
         val name = binding.inputName.editText?.text.toString()
-        val weight = binding.inputName.editText?.text.toString()
+        val weight = binding.inputWeight.editText?.text.toString()
 
-        if (name.isEmpty() or weight.isEmpty()) return false
-
-        sharedPrefs.edit()
-            .putString(Constants.KEY_NAME, name)
-            .putFloat(Constants.KEY_WEIGHT, weight.toFloatOrNull() ?: 56F)
-            .putBoolean(Constants.KEY_FIRST_TIME_TOGGLE, false)
-            .apply()
-
-        return true
+        return try{
+            sharedPrefs.edit()
+                .putString(Constants.KEY_NAME, name)
+                .putFloat(Constants.KEY_WEIGHT, weight.toFloatOrNull() ?: 56F)
+                .putBoolean(Constants.KEY_FIRST_TIME_TOGGLE, false)
+                .apply()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     override fun onDestroyView() {
